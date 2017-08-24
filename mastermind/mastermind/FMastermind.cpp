@@ -2,26 +2,80 @@
 #include "FMastermind.h"
 
 void FMastermind::Reset()
-{
+{	
+	constexpr int32 MAX_TRIES = 8;
+	
+	myCurrentTry = 1;
+	myMaxTries = MAX_TRIES;
+
+	const FString HIDDEN_WORD = "rgbyo";
+	secretWord = HIDDEN_WORD;
+
 	return;
 }
 
-int FMastermind::GetMaxTries()
+FMastermind::FMastermind()
 {
-	return 0;
+	Reset();
 }
 
-int FMastermind::GetCurrentTry()
+int32 FMastermind::GetMaxTries() const
 {
-	return 0;
+	return myMaxTries;
 }
 
-bool FMastermind::GameWon()
+int32 FMastermind::GetCurrentTry() const
+{
+	return myCurrentTry;
+}
+
+int32 FMastermind::GetHiddenWordLength() const
+{	
+	return secretWord.length();
+}
+
+bool FMastermind::GameWon() const
 {
 	return false;
 }
 
-bool FMastermind::IsGuessValid(std::string)
+EGuessStatus FMastermind::CheckGuessValidity(FString Guess) const
 {
-	return false;
+	if (false) {
+		return EGuessStatus::NOT_ISOGRAM;
+	}
+	else if (false) {
+		return EGuessStatus::NOT_LOWERCASE;
+	} 
+	else if (Guess.length() != GetHiddenWordLength()) {
+		return EGuessStatus::WRONG_LENGTH;
+	}
+	else {
+		return EGuessStatus::OK;
+	}
+}
+
+FredWhiteCount FMastermind::SubmitGuess(FString Guess)
+{	
+	//increment the turn number
+	myCurrentTry++;
+
+	//set up a return variable
+	FredWhiteCount redWhiteCount;
+	int32 secreatWordLength = secretWord.length();
+
+	for (int32 i = 0; i < secreatWordLength; i++) {
+		for (int32 j = 0; j < secreatWordLength; j++) {
+			if (Guess[i] == secretWord[j]) {
+				if (i == j) {
+					redWhiteCount.Reds++;
+				}
+				else {
+					redWhiteCount.Whites++;
+				}
+			}
+		}
+	}
+
+	return redWhiteCount;
 }

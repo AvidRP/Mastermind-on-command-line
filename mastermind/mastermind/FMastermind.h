@@ -2,17 +2,35 @@
 
 #include <string>
 
+using FString = std::string;
+using int32 = int;
+
+struct FredWhiteCount
+{
+	int32 Whites = 0; 
+	int32 Reds = 0;
+};
+
+enum class EGuessStatus
+{
+	Invalid, OK, NOT_ISOGRAM, WRONG_LENGTH, NOT_LOWERCASE
+};
+
 class FMastermind
 {
 public:
+	FMastermind();
+	int32 GetMaxTries() const;
+	int32 GetCurrentTry() const;
+	int32 GetHiddenWordLength() const;
+	bool GameWon() const;
 	void Reset();
-	int GetMaxTries();
-	int GetCurrentTry();
-	bool GameWon();
-	bool IsGuessValid(std::string);
+	EGuessStatus CheckGuessValidity(FString) const;
+	//cout red and white and increase turn #
+	FredWhiteCount SubmitGuess(FString);
 
 private:
-	int myCurrentTry;
-	int myMaxTries;
-
+	int32 myCurrentTry;
+	int32 myMaxTries;
+	FString secretWord;
 };

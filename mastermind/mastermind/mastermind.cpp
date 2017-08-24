@@ -4,23 +4,30 @@
 #include "stdafx.h"
 #include <iostream>
 #include <string>
+//header file
+#include "FMastermind.h"
 
-
+using FText = std::string;
+using int32 = int;
 
 void gameIntro();
 
 void playGame();
 
-std::string getGuess();
+FText getValidGuess();
 
-std::string printGuess(std::string Guess);
+FText printGuess(FText Guess);
 
 bool playAgain();
+
+//game instance
+FMastermind MastermindGame;
 
 
 
 int main()
 {	
+	std::cout<<MastermindGame.GetCurrentTry();
 
 	bool bWantsToPlayAgain;
  
@@ -41,12 +48,12 @@ int main()
 void gameIntro() 
 {
 	
-	constexpr int COLOR_LENGTH = 5;
+	
 
 	std::cout << std::endl;
 	std::cout << "Welcome to Mastermind!! A fun yet challenging command-line game." << std::endl;
 	std::cout << std::endl;
-	std::cout << "Can you guess the colour combination consisting of " << COLOR_LENGTH << " colours that I am thinking of?" << std::endl;
+	std::cout << "Can you guess the colour combination consisting of " << MastermindGame.GetHiddenWordLength() << " colours that I am thinking of?" << std::endl;
 
 	return;
 }
@@ -54,45 +61,73 @@ void gameIntro()
 
 void playGame()
 {
-	constexpr int MAX_GUESSES = 12;
+	
+	int32 maxTries = MastermindGame.GetMaxTries();
+	
 
-	for (int i = 0; i < MAX_GUESSES; i++) {
-		getGuess();
+	constexpr int32 MAX_GUESSES = 12;
+
+	for (int32 i = 0; i < MAX_GUESSES; i++) {
+		FText Guess = getValidGuess(); //TODO check if guess is valid
+
+		
+
+
+
+
+		FredWhiteCount redWhiteCount = MastermindGame.SubmitGuess(Guess);
+
+		std::cout << "Red = " << redWhiteCount.Reds;
+		std::cout << "| White = " << redWhiteCount.Whites << std::endl;
+		std::cout << std::endl;
 	}
 }
 
 
 //user input for guess
-std::string getGuess()
-{
-	
-	std::string Guess = "";
-	std::cout << std::endl;
-	std::cout << "Please enter your guess: ";
-	getline(std::cin, Guess);
-	
-	printGuess(Guess);
+FText getValidGuess()
+{	
+	EGuessStatus Status = EGuessStatus::Invalid;
+	do {
+		int32 currentTry = MastermindGame.GetCurrentTry();
+		FText Guess = "";
+		std::cout << std::endl;
+		std::cout << "Try " << currentTry << ". Please enter your guess: ";
+		getline(std::cin, Guess);
 
-	return Guess;
+		//Checking if valid
+		Status = MastermindGame.CheckGuessValidity(Guess);
+
+		switch (Status)
+		{
+
+		case EGuessStatus::WRONG_LENGTH:
+			std::cout << "Your word length is incorrect. Please try again. " << std::endl;
+			break;
+
+		case EGuessStatus::NOT_ISOGRAM:
+			std::cout << "Please recheck the characters you entered. You color patter is invalid " << std::endl;
+			break;
+
+		case EGuessStatus::NOT_LOWERCASE:
+			std::cout << "Please input a guess that is all lowercase " << std::endl;
+			break;
+
+		default:
+			return Guess;
+		}
+	} while (Status != EGuessStatus::OK);
+
 }
 
 
-//print back the guess
-std::string printGuess(std::string Guess) 
-{
-
-	//print the user input
-	std::cout << "Your guess was: " << Guess << std::endl;
-	std::cout << std::endl;
-
-	return Guess;
-}
 
 //ask if user wants to play again
 bool playAgain() 
 {
+	MastermindGame.Reset();
 	std::cout << "Do you want to play again? (y/n)";
-	std::string Response = "";
+	FText Response = "";
 	getline(std::cin, Response);
 
 	return (Response[0] == 'y' || Response[0] == 'Y');
