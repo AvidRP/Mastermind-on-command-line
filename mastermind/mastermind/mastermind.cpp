@@ -20,6 +20,8 @@ FText printGuess(FText Guess);
 
 bool playAgain();
 
+void PrintGameSummary();
+
 //game instance
 FMastermind MastermindGame;
 
@@ -67,20 +69,18 @@ void playGame()
 
 	constexpr int32 MAX_GUESSES = 12;
 
-	for (int32 i = 0; i < MAX_GUESSES; i++) {
+	while (!MastermindGame.IsGameWon() && MastermindGame.GetCurrentTry() <= maxTries) {
 		FText Guess = getValidGuess(); //TODO check if guess is valid
 
-		
-
-
-
-
-		FredWhiteCount redWhiteCount = MastermindGame.SubmitGuess(Guess);
+		FredWhiteCount redWhiteCount = MastermindGame.SubmitValidGuess(Guess);
 
 		std::cout << "Red = " << redWhiteCount.Reds;
 		std::cout << "| White = " << redWhiteCount.Whites << std::endl;
 		std::cout << std::endl;
 	}
+	PrintGameSummary();
+	
+
 }
 
 
@@ -118,6 +118,15 @@ FText getValidGuess()
 		}
 	} while (Status != EGuessStatus::OK);
 
+}
+
+void PrintGameSummary() {
+	if (MastermindGame.IsGameWon()) {
+		std::cout << "CONGRATULATION! YOU BEAT THIS GAME!!!" << std::endl;
+	}
+	else {
+		std::cout << "BETTER LUCK NEXT TIME!" << std::endl;
+	}
 }
 
 

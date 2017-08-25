@@ -23,14 +23,15 @@ public:
 	int32 GetMaxTries() const;
 	int32 GetCurrentTry() const;
 	int32 GetHiddenWordLength() const;
-	bool GameWon() const;
+	bool IsGameWon() const;
 	void Reset();
 	EGuessStatus CheckGuessValidity(FString) const;
 	//cout red and white and increase turn #
-	FredWhiteCount SubmitGuess(FString);
+	FredWhiteCount SubmitValidGuess(FString);
 
 private:
 	int32 myCurrentTry;
 	int32 myMaxTries;
 	FString secretWord;
+	bool bGameIsWon;
 };

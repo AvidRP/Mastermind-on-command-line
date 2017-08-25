@@ -10,6 +10,7 @@ void FMastermind::Reset()
 
 	const FString HIDDEN_WORD = "rgbyo";
 	secretWord = HIDDEN_WORD;
+	bGameIsWon = false;
 
 	return;
 }
@@ -34,9 +35,9 @@ int32 FMastermind::GetHiddenWordLength() const
 	return secretWord.length();
 }
 
-bool FMastermind::GameWon() const
+bool FMastermind::IsGameWon() const
 {
-	return false;
+	return bGameIsWon;
 }
 
 EGuessStatus FMastermind::CheckGuessValidity(FString Guess) const
@@ -55,7 +56,7 @@ EGuessStatus FMastermind::CheckGuessValidity(FString Guess) const
 	}
 }
 
-FredWhiteCount FMastermind::SubmitGuess(FString Guess)
+FredWhiteCount FMastermind::SubmitValidGuess(FString Guess)
 {	
 	//increment the turn number
 	myCurrentTry++;
@@ -76,6 +77,11 @@ FredWhiteCount FMastermind::SubmitGuess(FString Guess)
 			}
 		}
 	}
-
+	if (redWhiteCount.Reds == secreatWordLength) {
+		bGameIsWon = true;
+	}
+	else {
+		bGameIsWon = false;
+	}
 	return redWhiteCount;
 }
