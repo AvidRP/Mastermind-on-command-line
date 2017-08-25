@@ -42,10 +42,10 @@ bool FMastermind::IsGameWon() const
 
 EGuessStatus FMastermind::CheckGuessValidity(FString Guess) const
 {
-	if (false) {
+	if (!IsIsogram(Guess)) {
 		return EGuessStatus::NOT_ISOGRAM;
 	}
-	else if (false) {
+	else if (!IsLowercase(Guess)) {
 		return EGuessStatus::NOT_LOWERCASE;
 	} 
 	else if (Guess.length() != GetHiddenWordLength()) {
@@ -84,4 +84,34 @@ FredWhiteCount FMastermind::SubmitValidGuess(FString Guess)
 		bGameIsWon = false;
 	}
 	return redWhiteCount;
+}
+
+bool FMastermind::IsIsogram(FString Word) const
+{	
+	if (Word.length() <= 1) { return true; }
+	//Setting up the map
+	TMap<char, bool> LetterSeen;
+
+	//auto cause dont really care about the type coming in
+	for (auto Letter : Word) {
+		Letter = tolower(Letter);
+		if (LetterSeen[Letter]) {
+			return false; //no repetition
+		}
+		else { //other wise add letter to map
+			LetterSeen[Letter] = true;
+		}
+	}
+	
+	return true;
+}
+
+bool FMastermind::IsLowercase(FString Word) const
+{
+	for (auto Letter : Word) {
+		if (!islower(Letter)) {
+			return false;
+		}
+	}
+	return true;
 }

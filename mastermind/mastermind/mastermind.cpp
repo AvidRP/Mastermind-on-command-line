@@ -7,6 +7,7 @@
 //header file
 #include "FMastermind.h"
 
+
 using FText = std::string;
 using int32 = int;
 
@@ -55,7 +56,8 @@ void gameIntro()
 	std::cout << std::endl;
 	std::cout << "Welcome to Mastermind!! A fun yet challenging command-line game." << std::endl;
 	std::cout << std::endl;
-	std::cout << "Can you guess the colour combination consisting of " << MastermindGame.GetHiddenWordLength() << " colours that I am thinking of?" << std::endl;
+	std::cout << "Can you guess the colour combination consisting of " << MastermindGame.GetHiddenWordLength() << " colours that I am thinking of?";
+	std::cout << "You can input r(red), g(green), b(blue), y(yellow), p(pink), o(orange), s(silver), w(white)" << std::endl;
 
 	return;
 }
@@ -106,7 +108,7 @@ FText getValidGuess()
 			break;
 
 		case EGuessStatus::NOT_ISOGRAM:
-			std::cout << "Please recheck the characters you entered. You color patter is invalid " << std::endl;
+			std::cout << "Please recheck the characters you entered. You cannot have repeating colors " << std::endl;
 			break;
 
 		case EGuessStatus::NOT_LOWERCASE:

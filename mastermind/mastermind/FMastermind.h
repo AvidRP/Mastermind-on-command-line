@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <map>
+#define TMap std::map
 
 using FString = std::string;
 using int32 = int;
@@ -34,4 +36,6 @@ private:
 	int32 myMaxTries;
 	FString secretWord;
 	bool bGameIsWon;
+	bool IsIsogram(FString Word) const;
+	bool IsLowercase(FString Word) const;
 };
